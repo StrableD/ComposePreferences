@@ -1,6 +1,6 @@
 # Compose Preferences
 
-![GitHub Release](https://img.shields.io/github/v/release/StrableD/ComposePreferences?include_prereleases&display_name=tag) ![Maven Central Version](https://img.shields.io/maven-central/v/com.strabled/ComposePreferences) [![License](https://img.shields.io/github/license/StableD/ComposePreferences?color=blue)](LICENSE.txt)
+![GitHub Release](https://img.shields.io/github/v/release/StrableD/ComposePreferences?include_prereleases&display_name=tag) ![Maven Central Version](https://img.shields.io/maven-central/v/com.strabled/ComposePreferences) ![License](https://img.shields.io/github/license/StrableD/ComposePreferences)
 
 [Preference](https://developer.android.com/develop/ui/views/components/settings) implementation
 for [Jetpack Compose](https://developer.android.com/jetpack/compose) [Material 3](https://developer.android.com/jetpack/compose/designsystems/material3).
