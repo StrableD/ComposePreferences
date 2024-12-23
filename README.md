@@ -31,13 +31,13 @@ Gradle (module level):
 build.gradle
 
 ```gradle
-implementation 'com.strableD:ComposePreferences:1.0.0'
+implementation 'io.github.strableD:ComposePreferences:1.0.0'
 ```
 
 build.gradle.kts
 
 ```groovy
-implementation('com.strableD:ComposePreferences:1.0.0')
+implementation('io.github.strableD:ComposePreferences:1.0.0')
 ```
 
 ## Usage

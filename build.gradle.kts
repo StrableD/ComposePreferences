@@ -19,7 +19,3 @@ plugins{
     alias(libs.plugins.maven.publish)
     alias(libs.plugins.gradleup.nmcp)
 }
-
-task(name = "clean", type = Delete::class) {
-    delete(rootProject.layout.buildDirectory)
-}
