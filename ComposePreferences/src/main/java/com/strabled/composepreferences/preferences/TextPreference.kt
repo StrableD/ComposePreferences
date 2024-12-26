@@ -57,8 +57,7 @@ fun TextPreference(
                 text = title,
                 Modifier
                     .fillMaxWidth()
-                    .padding(start = PreferenceTheme.spacing.preferenceTitleIndent),
-                color = PreferenceTheme.colorScheme.titleColor
+                    .padding(start = PreferenceTheme.spacing.preferenceTitleIndent)
             )
         },
         makeMinimal = makeMinimal,

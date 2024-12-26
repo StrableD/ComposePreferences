@@ -67,8 +67,8 @@ fun <T> SliderPreference(
     steps: Int = 0,
     showValue: Boolean = false
 ) where T : Number, T : Comparable<T> {
-    val preferenceData: DataStoreManager.PreferenceData<T> by preference
-    val preferenceValue by preferenceData.flow.collectAsState()
+    val preferenceData by preference
+    val preferenceValue by preferenceData.collectAsState()
 
     var value by remember { mutableFloatStateOf(preferenceValue.toFloat()) }
 
@@ -83,7 +83,7 @@ fun <T> SliderPreference(
      */
     fun edit(newValue: T) {
         try {
-            preferenceData.set(newValue)
+            preference.set(newValue)
             onValueChange(newValue)
         } catch (e: Exception) {
             Log.e("SliderPreference", "Could not write preference $preference to database.", e)

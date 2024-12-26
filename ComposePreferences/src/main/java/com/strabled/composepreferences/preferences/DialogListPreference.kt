@@ -56,7 +56,7 @@ import com.strabled.composepreferences.utilis.*
  * @see androidx.compose.foundation.layout.Row
  */
 @Composable
-fun <T> DialogListPreference(
+fun <T: Any> DialogListPreference(
     preference: DataStoreManager.Preference<T>,
     title: String,
     modifier: Modifier = Modifier,
@@ -71,14 +71,14 @@ fun <T> DialogListPreference(
     trailingContent: @Composable () -> Unit = {}
 ) {
     require(!useSelectedInSummary || summary != null) { "When useSelectedInSummary is true, summary must be provided." }
-    val preferenceData: DataStoreManager.PreferenceData<T> by preference
-    val preferenceValue by preferenceData.flow.collectAsState()
+    val preferenceData by preference
+    val preferenceValue by preferenceData.collectAsState()
 
     var showDialog by rememberSaveable { mutableStateOf(false) }
 
     fun edit(value: T) {
         try {
-            preferenceData.set(value)
+            preference.set(value)
             showDialog = false
             onItemSelected(value)
         } catch (e: Exception) {
@@ -178,7 +178,7 @@ fun <T> DialogListPreference(
  * @see androidx.compose.material3.RadioButton
  */
 @Composable
-fun <T> DialogListPreference(
+fun <T: Any> DialogListPreference(
     preference: DataStoreManager.Preference<T>,
     title: String,
     modifier: Modifier = Modifier,

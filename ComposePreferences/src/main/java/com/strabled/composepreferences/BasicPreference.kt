@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 
@@ -75,22 +76,34 @@ fun BasicPreference(
         }
 
         Column(verticalArrangement = Arrangement.Center, modifier = Modifier.weight(1f)) {
-            ProvideTextStyle(PreferenceTheme.typography.titleStyle.applyAlpha(if (enabled || !darkenOnDisable) AlphaHigh else AlphaDisabled)) {
+            ProvideTextStyle(
+                PreferenceTheme.typography.titleStyle.applyColor(
+                    PreferenceTheme.colorScheme.titleColor,
+                    if (enabled || !darkenOnDisable) AlphaHigh else AlphaDisabled
+                )
+            ) {
                 text()
             }
             CompositionLocalProvider(
-                LocalTextStyle provides PreferenceTheme.typography.summaryStyle.applyAlpha(if (enabled || !darkenOnDisable) AlphaMedium else AlphaDisabled),
-                LocalContentColor provides PreferenceTheme.colorScheme.summaryColor,
+                LocalTextStyle provides PreferenceTheme.typography.summaryStyle.applyColor(
+                    PreferenceTheme.colorScheme.summaryColor,
+                    if (enabled || !darkenOnDisable) AlphaMedium else AlphaDisabled
+                ),
                 content = { secondaryText?.invoke() }
             )
         }
-        ProvideTextStyle(PreferenceTheme.typography.trailingContentStyle.applyAlpha(if (enabled || !darkenOnDisable) AlphaHigh else AlphaDisabled)) {
+        ProvideTextStyle(
+            PreferenceTheme.typography.trailingContentStyle.applyColor(
+                PreferenceTheme.colorScheme.trailingContentColor,
+                if (enabled || !darkenOnDisable) AlphaHigh else AlphaDisabled
+            )
+        ) {
             trailingContent()
         }
     }
 }
 
-private fun TextStyle.applyAlpha(alpha: Float): TextStyle = copy(color = color.copy(alpha = alpha))
+private fun TextStyle.applyColor(color: Color, alpha: Float = 1f): TextStyle = copy(color = color.copy(alpha = alpha))
 
 internal fun applyClickable(enabled: Boolean, onClick: () -> Unit): Modifier = if (enabled) Modifier.clickable(onClick = onClick) else Modifier
 

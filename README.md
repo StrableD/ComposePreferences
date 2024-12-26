@@ -1,6 +1,8 @@
-# Compose Preferences
+[![GitHub Release](https://img.shields.io/github/v/release/StrableD/ComposePreferences?include_prereleases&display_name=tag&style=plastic)](https://github.com/StrableD/ComposePreferences/releases/latest) 
+[![Maven Central Version](https://img.shields.io/maven-central/v/io.github.strabled/ComposePreferences?style=plastic)](https://central.sonatype.com/artifact/io.github.strabled/ComposePreferences) 
+[![License](https://img.shields.io/github/license/StrableD/ComposePreferences)](LICENSE.txt)
 
-![GitHub Release](https://img.shields.io/github/v/release/StrableD/ComposePreferences?include_prereleases&display_name=tag) ![Maven Central Version](https://img.shields.io/maven-central/v/io.github.strabled/ComposePreferences) ![License](https://img.shields.io/github/license/StrableD/ComposePreferences)
+# Compose Preferences
 
 [Preference](https://developer.android.com/develop/ui/views/components/settings) implementation
 for [Jetpack Compose](https://developer.android.com/jetpack/compose) [Material 3](https://developer.android.com/jetpack/compose/designsystems/material3).
@@ -26,18 +28,29 @@ This is not an officially supported Google product.
 
 ## Integration
 
-Gradle (module level):
+### Gradle (module level):
 
 build.gradle
 
 ```gradle
-implementation 'io.github.strableD:ComposePreferences:1.0.0'
+implementation 'io.github.strableD:ComposePreferences:${latest-version}'
 ```
 
 build.gradle.kts
 
-```groovy
-implementation('io.github.strableD:ComposePreferences:1.0.0')
+```kotlin
+implementation('io.github.strableD:ComposePreferences:${latest-version}')
+//or with verion catalog
+implementation(libs.compose.preferences)
+```
+
+### Version Catalog
+```toml
+[versions]
+composePreferences = {latest-version}
+
+[libraries]
+compose-preferences = { group = "io.github.strableD", name = "ComposePreferences", version.ref = "composePreferences" }
 ```
 
 ## Usage
@@ -52,14 +65,14 @@ ProvideDataStoreManager {
 }
 ```
 
-You can provide your own ``DataStoreManager`` to the ``ProvideDataStoreManager`` if you don't want to use the default one:
+You can provide your own ``DataStoreManager`` to the ``ProvideDataStoreManager`` if you don't want to use the default one. This can be done like this:
 
 ```kotlin
 val Context.dataStore by preferencesDataStore(name = "settings")
 val dataStoreManager = DataStoreManager(context = LocalContext.current, dataStore = LocalContext.current.dataStore)
 
 ProvideDataStoreManager(dataStoreManager = dataStoreManager) {
-    ...
+    ..
 }
 ```
 
@@ -67,7 +80,7 @@ Next in your actual Preferences/Settings screen, you can create a ``PreferenceSc
 
 ```kotlin
 PreferenceScreen() {
-    ...
+    ..
 }
 ```
 
@@ -75,7 +88,7 @@ Here you can define the Scaffhold components such as a Top Bar, Floating Action 
 
 ```kotlin
 PreferenceScreen(scaffoldComponents = ScaffholdComponents(topBar = { SettingsTopBar() })) {
-    ...
+    ..
 }
 ```
 
@@ -118,8 +131,23 @@ PreferenceScreen(
     typography = typography,
     spacing = spacing
 ) {
-    ...
+    ..
 }
+```
+
+To get the preference, you can use the convinience function `getPreference` which retrieves the preference from the `DataStoreManager` by the given key.
+A `StateFlow` of the value of the preference can be obtained by delegating the preference to a variable, and it can be set with the `Preference.set` method.
+```kotlin
+val preference: Preference<Int> = getPreference<Int>("intKey")
+val preferenceData: StateFlow<Int> by preference
+val preferenceValue: Int by preferenceData.collectAsState()
+```
+The preferences support serialization with the [kotlin serialization plugin](https://kotlinlang.org/docs/serialization.html).
+```kotlin
+@Serializable
+data class User(val name: String, val age: Int)
+
+val preferenceData: StateFlow<User> by getPreference("userKey")
 ```
 
 ## Preferences

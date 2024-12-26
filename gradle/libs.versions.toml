@@ -43,5 +43,6 @@ android-application = { id = "com.android.application" }
 kotlin-android = { id = "org.jetbrains.kotlin.android" }
 android-library = { id = "com.android.library" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref="kgp"}
 maven-publish = { id = "com.vanniktech.maven.publish", version="0.30.0" }
 gradleup-nmcp = { id = "com.gradleup.nmcp", version="0.0.8" }

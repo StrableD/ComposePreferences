@@ -2,6 +2,7 @@ package com.strabled.composepreferencessample
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -21,11 +22,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import com.strabled.composepreferences.utilis.DialogText
 import com.strabled.composepreferences.PreferenceScreen
 import com.strabled.composepreferences.ScaffholdComponents
+import com.strabled.composepreferences.darkPreferenceColorTheme
 import com.strabled.composepreferences.getPreference
+import com.strabled.composepreferences.lightPreferenceColorTheme
 import com.strabled.composepreferences.preferences.*
+import com.strabled.composepreferences.utilis.DialogText
 
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
@@ -35,7 +38,10 @@ fun SettingsScreen() {
             if (char.isDigit() && index > 0 && !value[index - 1].isDigit()) " $char" else if (index == 0 && char.isLetter()) char.titlecase() else char.toString()
         }.joinToString("")
     }
-    PreferenceScreen(scaffoldComponents = ScaffholdComponents(topBar = { SettingsTopBar() })) {
+    PreferenceScreen(
+        scaffoldComponents = ScaffholdComponents(topBar = { SettingsTopBar() }),
+        theme = if (isSystemInDarkTheme()) darkPreferenceColorTheme() else lightPreferenceColorTheme()
+    ) {
         preferenceCategory("Text Preference") {
             preferenceItem {
                 TextPreference(
@@ -130,7 +136,7 @@ fun SettingsScreen() {
             }
             preferenceItem {
                 val preference by getPreference<Double>("sl3")
-                val value by preference.flow.collectAsState()
+                val value by preference.collectAsState()
                 SliderPreference(
                     preference = getPreference<Double>("sl3"),
                     title = "Simple slider",
@@ -359,7 +365,7 @@ fun SettingsScreen() {
             }
             preferenceItem {
                 val preferenceData by getPreference<Long>("cp2")
-                val value by preferenceData.flow.collectAsState()
+                val value by preferenceData.collectAsState()
                 val color = Color(value)
                 ColorPickerPreference<Long>(
                     preference = getPreference("cp2"),

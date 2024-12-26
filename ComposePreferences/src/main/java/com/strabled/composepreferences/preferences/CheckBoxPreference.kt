@@ -48,12 +48,12 @@ fun CheckBoxPreference(
     leadingIcon: @Composable (() -> Unit)? = null,
     onValueChange: (Boolean) -> Unit = {}
 ) {
-    val preferenceData: DataStoreManager.PreferenceData<Boolean> by preference
-    val preferenceValue by preferenceData.flow.collectAsState()
+    val preferenceData by preference
+    val preferenceValue by preferenceData.collectAsState()
 
     fun edit(newValue: Boolean) {
         try {
-            preferenceData.set(newValue)
+            preference.set(newValue)
             onValueChange(newValue)
         } catch (e: Exception) {
             Log.e("CheckBoxPreference", "Could not write preference $preference to database.", e)

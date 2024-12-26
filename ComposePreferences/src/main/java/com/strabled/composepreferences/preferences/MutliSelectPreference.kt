@@ -75,14 +75,14 @@ fun MultiSelectPreference(
     trailingContent: @Composable () -> Unit = {}
 ) {
     require(!useSelectedInSummary || summary != null) { "Summary must be provided when useSelectedInSummary is true" }
-    val preferenceData: DataStoreManager.PreferenceData<Set<String>> by preference
-    val preferenceValue by preferenceData.flow.collectAsState()
+    val preferenceData by preference
+    val preferenceValue by preferenceData.collectAsState()
 
     var showDialog by rememberSaveable { mutableStateOf(false) }
 
     fun edit(newValue: Set<String>) {
         try {
-            preferenceData.set(newValue)
+            preference.set(newValue)
             showDialog = false
             onItemSelected(newValue)
         } catch (e: Exception) {

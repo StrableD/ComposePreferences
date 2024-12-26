@@ -109,14 +109,14 @@ internal fun IntColorPickerDialog(
 ) {
     require(!useSelectedInSummary || summary != null) { "When useSeletcedInSummary is true, summary must be provided." }
     val preferenceDate by preference
-    val preferenceValue by preferenceDate.flow.collectAsState()
+    val preferenceValue by preferenceDate.collectAsState()
     val color = Color(preferenceValue)
 
     var showDialog by rememberSaveable { mutableStateOf(false) }
 
     fun edit(color: Color) {
         try {
-            preferenceDate.set(color.toArgb())
+            preference.set(color.toArgb())
             showDialog = false
             onColorSelected(color)
         } catch (e: Exception) {
@@ -177,14 +177,14 @@ internal fun LongColorPickerDialog(
 ) {
     require(!useSelectedInSummary || summary != null) { "When useSeletcedInSummary is true, summary must be provided." }
     val preferenceDate by preference
-    val preferenceValue by preferenceDate.flow.collectAsState()
+    val preferenceValue by preferenceDate.collectAsState()
     val color = Color(preferenceValue)
 
     var showDialog by rememberSaveable { mutableStateOf(false) }
 
     fun edit(color: Color) {
         try {
-            preferenceDate.set(color.toArgb().toLong())
+            preference.set(color.toArgb().toLong())
             showDialog = false
             onColorSelected(color)
         } catch (e: Exception) {

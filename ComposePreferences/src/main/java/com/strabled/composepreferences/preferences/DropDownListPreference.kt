@@ -66,7 +66,7 @@ import com.strabled.composepreferences.utilis.DataStoreManager
  * ```
  */
 @Composable
-fun <T> DropDownListPreference(
+fun <T: Any> DropDownListPreference(
     preference: DataStoreManager.Preference<T>,
     title: String,
     modifier: Modifier = Modifier,
@@ -80,14 +80,14 @@ fun <T> DropDownListPreference(
     trailingContent: @Composable () -> Unit = {}
 ) {
     require(!useSelectedInSummary || summary != null) { "Summary must be provided when useSelectedInSummary is true" }
-    val preferenceData: DataStoreManager.PreferenceData<T> by preference
-    val preferenceValue by preferenceData.flow.collectAsState()
+    val preferenceData by preference
+    val preferenceValue by preferenceData.collectAsState()
 
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     fun edit(value: T) {
         try {
-            preferenceData.set(value)
+            preference.set(value)
             expanded = false
             onItemSelected(value)
         } catch (e: Exception) {
@@ -180,7 +180,7 @@ fun <T> DropDownListPreference(
  * ```
  */
 @Composable
-fun <T> DropDownListPreference(
+fun <T: Any> DropDownListPreference(
     preference: DataStoreManager.Preference<T>,
     title: String,
     modifier: Modifier = Modifier,

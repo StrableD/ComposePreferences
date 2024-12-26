@@ -43,7 +43,7 @@ import com.strabled.composepreferences.utilis.*
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <T> BottomSheetListPreference(
+fun <T: Any> BottomSheetListPreference(
     preference: DataStoreManager.Preference<T>,
     title: String,
     modifier: Modifier = Modifier,
@@ -60,7 +60,7 @@ fun <T> BottomSheetListPreference(
 ) {
     require(!useSelectedInSummary || summary != null) { "When useSelectedInSummary is true, summary must be provided." }
     val preferenceData by preference
-    val preferenceValue by preferenceData.flow.collectAsState()
+    val preferenceValue by preferenceData.collectAsState()
 
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
@@ -75,7 +75,7 @@ fun <T> BottomSheetListPreference(
 
     fun edit(value: T) {
         try {
-            preferenceData.set(value)
+            preference.set(value)
             showBottomSheet = false
             onValueChange(value)
         } catch (e: Exception) {
@@ -148,7 +148,7 @@ fun <T> BottomSheetListPreference(
  * @param trailingContent A composable function to display trailing content for the [preference item][PreferenceItem].
  */
 @Composable
-fun <T> BottomSheetListPreference(
+fun <T: Any> BottomSheetListPreference(
     preference: DataStoreManager.Preference<T>,
     title: String,
     modifier: Modifier = Modifier,

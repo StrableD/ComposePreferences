@@ -65,8 +65,8 @@ fun EditTextPreference(
     onValueChange: (String) -> Unit = {},
     onValueSaved: (String) -> Unit = {}
 ) {
-    val preferenceData: DataStoreManager.PreferenceData<String> by preference
-    val preferenceValue by preferenceData.flow.collectAsState()
+    val preferenceData by preference
+    val preferenceValue by preferenceData.collectAsState()
 
     var showDialog by rememberSaveable { mutableStateOf(false) }
     var textValue by remember { mutableStateOf(preferenceValue) }
@@ -76,7 +76,7 @@ fun EditTextPreference(
      */
     fun edit() {
         try {
-            preferenceData.set(textValue)
+            preference.set(textValue)
             onValueChange(textValue)
         } catch (e: Exception) {
             Log.e("EditTextPreference", "Could not write preference $preference to database.", e)

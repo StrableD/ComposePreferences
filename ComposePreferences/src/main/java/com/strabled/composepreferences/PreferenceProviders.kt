@@ -52,7 +52,7 @@ fun ProvideDataStoreManager(dataStoreManager: DataStoreManager = defaultDataStor
  * @see DataStoreManager.setPreferences
  */
 @Composable
-fun setPreferences(preferences: Map<String, *>) {
+fun setPreferences(preferences: Map<String, Any>) {
     LocalDataStoreManager.current.setPreferences(preferences)
 }
 
@@ -66,6 +66,6 @@ fun setPreferences(preferences: Map<String, *>) {
  * @see DataStoreManager.getPreference
  */
 @Composable
-fun <T> getPreference(key: String): DataStoreManager.Preference<T> {
+fun <T: Any> getPreference(key: String): DataStoreManager.Preference<T> {
     return LocalDataStoreManager.current.getPreference<T>(key)
 }

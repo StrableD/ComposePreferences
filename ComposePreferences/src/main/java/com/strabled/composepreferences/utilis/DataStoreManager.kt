@@ -3,13 +3,8 @@ package com.strabled.composepreferences.utilis
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.floatPreferencesKey
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +14,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 import kotlin.reflect.KProperty
@@ -50,7 +46,7 @@ class DataStoreManager(context: Context, dataStore: DataStore<Preferences>? = nu
      * @return The [Preference] associated with the key.
      * @throws IllegalArgumentException if the [Preference] with the given key is not found.
      */
-    fun <T> getPreference(key: String): Preference<T>{
+    fun <T : Any> getPreference(key: String): Preference<T> {
         @Suppress("UNCHECKED_CAST")
         return (preferences[key] ?: throw IllegalArgumentException("Preference with key $key not found")) as Preference<T>
     }
@@ -60,7 +56,7 @@ class DataStoreManager(context: Context, dataStore: DataStore<Preferences>? = nu
      *
      * @param preferences A map of key-value pairs representing the [Preference]s to be set. The key is the name of the [preference key][Preferences.Key], and the value is the default [Preference] value.
      */
-    fun setPreferences(preferences: Map<String, *>) {
+    fun setPreferences(preferences: Map<String, Any>) {
         preferences.forEach { (key, value) ->
             this.preferences[key] = Preference(key, value)
         }
@@ -72,37 +68,26 @@ class DataStoreManager(context: Context, dataStore: DataStore<Preferences>? = nu
      * @param keyName The name of the [preference key][Preferences.Key].
      * @param defaultValue The default value of the [Preference].
      */
-    inner class Preference<T>(
-        private val keyName: String,
-        private val defaultValue: T,
-    ) {
+    inner class Preference<T : Any>(keyName: String, defaultValue: T, serializer: KSerializer<T>) {
 
-        @Suppress("UNCHECKED_CAST")
-        private val key: Preferences.Key<T> = when (defaultValue) {
-            is String -> stringPreferencesKey(keyName)
-            is Int -> intPreferencesKey(keyName)
-            is Boolean -> booleanPreferencesKey(keyName)
-            is Float -> floatPreferencesKey(keyName)
-            is Long -> longPreferencesKey(keyName)
-            is Double -> floatPreferencesKey(keyName)
-            else -> {
-                if (defaultValue.isStringSet()) {
-                    stringSetPreferencesKey(keyName)
-                } else if (defaultValue.isStringConvertible()) {
-                    stringPreferencesKey(keyName)
-                } else {
-                    throw IllegalArgumentException("Unsupported type ${defaultValue?.let { it::class } ?: defaultValue}")
-                }
-            }
-        } as Preferences.Key<T>
+        private val keyName: String = keyName
+        private val defaultValue: T = defaultValue
+        private val serializer: KSerializer<T> = serializer
+        private val key: Preferences.Key<String> = stringPreferencesKey(this@Preference.keyName)
+
+        @OptIn(InternalSerializationApi::class)
+        constructor(keyName: String, defaultValue: T) : this(keyName, defaultValue, defaultValue!!::class.serializer() as KSerializer<T>)
 
         private val preferenceData = PreferenceData(
-            key = key,
-            defaultValue = defaultValue,
+            key = this.key,
+            defaultValue = this.defaultValue,
+            serializer = this.serializer
         )
 
-        operator fun getValue(thisRef: Any?, property: KProperty<*>): PreferenceData<T> {
-            return preferenceData
+        operator fun getValue(thisRef: Any?, property: KProperty<*>): StateFlow<T> = preferenceData.getValue(thisRef, property)
+
+        fun set(newValue: T) {
+            preferenceData.set(newValue)
         }
     }
 
@@ -114,18 +99,15 @@ class DataStoreManager(context: Context, dataStore: DataStore<Preferences>? = nu
      * @param defaultValue The default value of the [Preference].
      * @param scope The [CoroutineScope] for managing coroutines.
      */
-    inner class PreferenceData<T>(
-        private val key: Preferences.Key<T>,
+    internal inner class PreferenceData<T>(
+        private val key: Preferences.Key<String>,
         private val defaultValue: T,
+        private val serializer: KSerializer<T>
     ) {
         @OptIn(InternalSerializationApi::class)
-        val flow: StateFlow<T> = dataStore.data
+        internal operator fun getValue(thisRef: Any?, property: KProperty<*>): StateFlow<T> = dataStore.data
             .map { preferences ->
-                if (defaultValue.isStringConvertible()) {
-                    (preferences[key] as String?)?.let { Json.decodeFromString(defaultValue!!::class.serializer(), it) } ?: defaultValue
-                } else {
-                    preferences[key] ?: defaultValue
-                }
+                preferences[key]?.let { Json.decodeFromString(serializer, it) } ?: defaultValue
             }
             .stateIn(
                 scope = scope,
@@ -138,10 +120,10 @@ class DataStoreManager(context: Context, dataStore: DataStore<Preferences>? = nu
          *
          * @param newValue The new value to be set.
          */
-        fun set(newValue: T) {
+        internal fun set(newValue: T) {
             scope.launch {
                 dataStore.edit { preferences ->
-                    preferences[key] = newValue
+                    preferences[key] = Json.encodeToString(serializer, newValue)
                 }
             }
         }
