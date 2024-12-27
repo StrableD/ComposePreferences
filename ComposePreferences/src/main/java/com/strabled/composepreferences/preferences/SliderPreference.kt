@@ -10,7 +10,6 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
@@ -19,12 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.strabled.composepreferences.*
-import com.strabled.composepreferences.utilis.DataStoreManager
+import com.strabled.composepreferences.utilis.Preference
 
 /**
  * A composable function that displays a [Slider] preference.
  *
- * @param preference The [DataStoreManager.Preference] object to be managed.
+ * @param preference The [Preference] object to be managed.
  * @param title The title of the preference.
  * @param modifier The [Modifier] to be applied to the preference layout.
  * @param summary An optional composable function to display a summary below the title.
@@ -49,13 +48,13 @@ import com.strabled.composepreferences.utilis.DataStoreManager
  * )
  * ```
  *
- * @see [DataStoreManager.Preference]
+ * @see [Preference]
  * @see [Modifier]
  * @see [Composable]
  */
 @Composable
 fun <T> SliderPreference(
-    preference: DataStoreManager.Preference<T>,
+    preference: Preference<T>,
     title: String,
     modifier: Modifier = Modifier,
     summary: @Composable (() -> Unit)? = null,
@@ -67,8 +66,7 @@ fun <T> SliderPreference(
     steps: Int = 0,
     showValue: Boolean = false
 ) where T : Number, T : Comparable<T> {
-    val preferenceData by preference
-    val preferenceValue by preferenceData.collectAsState()
+    val preferenceValue by preference.collectState()
 
     var value by remember { mutableFloatStateOf(preferenceValue.toFloat()) }
 
@@ -83,7 +81,7 @@ fun <T> SliderPreference(
      */
     fun edit(newValue: T) {
         try {
-            preference.set(newValue)
+            preference.updateValue(newValue)
             onValueChange(newValue)
         } catch (e: Exception) {
             Log.e("SliderPreference", "Could not write preference $preference to database.", e)

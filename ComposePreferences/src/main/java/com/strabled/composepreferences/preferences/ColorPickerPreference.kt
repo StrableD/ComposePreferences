@@ -2,7 +2,6 @@ package com.strabled.composepreferences.preferences
 
 import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -30,8 +29,9 @@ import com.strabled.composepreferences.utilis.*
  * @throws IllegalArgumentException If the type of the preference is not supported. Supporte types: [Int], [Long].
  */
 @Composable
+@Deprecated("Use ColorPickerPreference instead", ReplaceWith("ColorPickerPreference(preference, title, modifier, summary, enabled, darkenOnDisable, leadingIcon, dialogText, useSelectedInSummary, onColorSelected, trailingContent)"), DeprecationLevel.HIDDEN)
 inline fun <reified T> ColorPickerPreference(
-    preference: DataStoreManager.Preference<T>,
+    preference: Preference<T>,
     title: String,
     modifier: Modifier = Modifier,
     noinline summary: (@Composable (Color?) -> Unit)? = null,
@@ -46,7 +46,7 @@ inline fun <reified T> ColorPickerPreference(
     @Suppress("UNCHECKED_CAST")
     when (T::class) {
         Int::class -> IntColorPickerDialog(
-            preference = preference as DataStoreManager.Preference<Int>,
+            preference = preference as Preference<Int>,
             title = title,
             modifier = modifier,
             summary = summary,
@@ -60,7 +60,7 @@ inline fun <reified T> ColorPickerPreference(
         )
 
         Long::class -> LongColorPickerDialog(
-            preference = preference as DataStoreManager.Preference<Long>,
+            preference = preference as Preference<Long>,
             title = title,
             modifier = modifier,
             summary = summary,
@@ -95,7 +95,7 @@ inline fun <reified T> ColorPickerPreference(
 @Composable
 @PublishedApi
 internal fun IntColorPickerDialog(
-    preference: DataStoreManager.Preference<Int>,
+    preference: Preference<Int>,
     title: String,
     modifier: Modifier = Modifier,
     summary: (@Composable (Color?) -> Unit)? = null,
@@ -108,15 +108,14 @@ internal fun IntColorPickerDialog(
     trailingContent: @Composable () -> Unit = {}
 ) {
     require(!useSelectedInSummary || summary != null) { "When useSeletcedInSummary is true, summary must be provided." }
-    val preferenceDate by preference
-    val preferenceValue by preferenceDate.collectAsState()
+    val preferenceValue by preference.collectState()
     val color = Color(preferenceValue)
 
     var showDialog by rememberSaveable { mutableStateOf(false) }
 
     fun edit(color: Color) {
         try {
-            preference.set(color.toArgb())
+            preference.updateValue(color.toArgb())
             showDialog = false
             onColorSelected(color)
         } catch (e: Exception) {
@@ -163,7 +162,7 @@ internal fun IntColorPickerDialog(
 @Composable
 @PublishedApi
 internal fun LongColorPickerDialog(
-    preference: DataStoreManager.Preference<Long>,
+    preference: Preference<Long>,
     title: String,
     modifier: Modifier = Modifier,
     summary: (@Composable (Color?) -> Unit)? = null,
@@ -176,15 +175,14 @@ internal fun LongColorPickerDialog(
     trailingContent: @Composable () -> Unit = {}
 ) {
     require(!useSelectedInSummary || summary != null) { "When useSeletcedInSummary is true, summary must be provided." }
-    val preferenceDate by preference
-    val preferenceValue by preferenceDate.collectAsState()
+    val preferenceValue by preference.collectState()
     val color = Color(preferenceValue)
 
     var showDialog by rememberSaveable { mutableStateOf(false) }
 
     fun edit(color: Color) {
         try {
-            preference.set(color.toArgb().toLong())
+            preference.updateValue(color.toArgb().toLong())
             showDialog = false
             onColorSelected(color)
         } catch (e: Exception) {
@@ -208,6 +206,56 @@ internal fun LongColorPickerDialog(
             dialogText = dialogText,
             onDismiss = { showDialog = false },
             initialColor = color,
+            onColorSelected = ::edit
+        )
+    }
+}
+
+@JvmName("ColorPickerPreferenceColor")
+@Composable
+fun ColorPickerPreference(
+    preference: Preference<Color>,
+    title: String,
+    modifier: Modifier = Modifier,
+    summary: (@Composable (Color?) -> Unit)? = null,
+    enabled: Boolean = true,
+    darkenOnDisable: Boolean = false,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    dialogText: DialogText = DialogText(title),
+    useSelectedInSummary: Boolean = false,
+    onColorSelected: (Color) -> Unit = {},
+    trailingContent: @Composable () -> Unit = {}
+){
+    val preferenceValue by preference.collectState()
+
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+
+    fun edit(color: Color) {
+        try {
+            preference.updateValue(color)
+            showDialog = false
+            onColorSelected(color)
+        } catch (e: Exception) {
+            Log.e("ColorPickerPreference", "Could not write preference $preference to database.", e)
+        }
+    }
+
+    TextPreference(
+        title = title,
+        modifier = modifier,
+        summary = @Composable { if (useSelectedInSummary) summary?.invoke(preferenceValue) else summary?.invoke(null) },
+        enabled = enabled,
+        darkenOnDisable = darkenOnDisable,
+        leadingIcon = leadingIcon,
+        trailingContent = trailingContent,
+        onClick = { showDialog = true }
+    )
+
+    if (showDialog) {
+        ColorPickerDialog(
+            dialogText = dialogText,
+            onDismiss = { showDialog = false },
+            initialColor = preferenceValue,
             onColorSelected = ::edit
         )
     }

@@ -6,11 +6,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,10 +17,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
-import com.strabled.composepreferences.*
-import com.strabled.composepreferences.utilis.DataStoreManager
 import com.strabled.composepreferences.utilis.DialogButton
 import com.strabled.composepreferences.utilis.DialogText
+import com.strabled.composepreferences.utilis.Preference
 import com.strabled.composepreferences.utilis.PreferenceDialog
 
 /**
@@ -32,7 +29,7 @@ import com.strabled.composepreferences.utilis.PreferenceDialog
  * When the preference item is clicked, a dialog is shown with a list of items to select from.
  * The selected items are stored in the provided [preference] object.
  *
- * @param preference The [DataStoreManager.Preference] object that holds the set of selected items.
+ * @param preference The [Preference] object that holds the set of selected items.
  * @param title The title of the preference item.
  * @param modifier The [Modifier] to be applied to the preference item.
  * @param summary An optional [Composable] function to display a summary of the selected items.
@@ -47,7 +44,7 @@ import com.strabled.composepreferences.utilis.PreferenceDialog
  *
  * Example usage:
  * ```
- * val myPreference = DataStoreManager.Preference<Set<String>>("my_preference_key")
+ * val myPreference = Preference<Set<String>>("my_preference_key")
  *
  * MultiSelectPreference(
  *     preference = myPreference,
@@ -61,7 +58,7 @@ import com.strabled.composepreferences.utilis.PreferenceDialog
  */
 @Composable
 fun MultiSelectPreference(
-    preference: DataStoreManager.Preference<Set<String>>,
+    preference: Preference<Set<String>>,
     title: String,
     modifier: Modifier = Modifier,
     summary: (@Composable (Set<String>) -> Unit)? = null,
@@ -75,14 +72,13 @@ fun MultiSelectPreference(
     trailingContent: @Composable () -> Unit = {}
 ) {
     require(!useSelectedInSummary || summary != null) { "Summary must be provided when useSelectedInSummary is true" }
-    val preferenceData by preference
-    val preferenceValue by preferenceData.collectAsState()
+    val preferenceValue by preference.collectState()
 
     var showDialog by rememberSaveable { mutableStateOf(false) }
 
     fun edit(newValue: Set<String>) {
         try {
-            preference.set(newValue)
+            preference.updateValue(newValue)
             showDialog = false
             onItemSelected(newValue)
         } catch (e: Exception) {
@@ -149,7 +145,7 @@ fun MultiSelectPreference(
  *
  * This function displays a preference item that allows the user to select multiple items from a list.
  * When the preference item is clicked, a dialog is shown with a list of items to select from.
- * The selected items are stored in the provided [preference][DataStoreManager.Preference] object.
+ * The selected items are stored in the provided [preference][Preference] object.
  *
  * @param preference The [Preference] object that holds the set of selected items.
  * @param title The title of the preference item.
@@ -167,7 +163,7 @@ fun MultiSelectPreference(
  *
  * Example usage:
  * ```
- * val myPreference = DataStoreManager.Preference<Set<String>>("my_preference_key")
+ * val myPreference = Preference<Set<String>>("my_preference_key")
  *
  * MultiSelectPreference(
  *     preference = myPreference,
@@ -180,13 +176,13 @@ fun MultiSelectPreference(
  * )
  * ```
  *
- * @see [DataStoreManager.Preference]
+ * @see [Preference]
  * @see [Modifier]
  * @see [Composable]
  */
 @Composable
 fun MultiSelectPreference(
-    preference: DataStoreManager.Preference<Set<String>>,
+    preference: Preference<Set<String>>,
     title: kotlin.String,
     modifier: Modifier = Modifier,
     summary: (@Composable (Set<String>) -> Unit)? = null,

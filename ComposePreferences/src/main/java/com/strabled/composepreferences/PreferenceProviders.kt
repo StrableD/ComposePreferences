@@ -1,12 +1,15 @@
 package com.strabled.composepreferences
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocal
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.runtime.CompositionLocal
 import androidx.datastore.core.DataStore
 import com.strabled.composepreferences.utilis.DataStoreManager
+import com.strabled.composepreferences.utilis.Preference
+import com.strabled.composepreferences.utilis.PreferenceBuilder
+import com.strabled.composepreferences.utilis.buildPreferences
 
 /**
  * Provides a default instance of [DataStoreManager] using the current [LocalContext].
@@ -52,8 +55,42 @@ fun ProvideDataStoreManager(dataStoreManager: DataStoreManager = defaultDataStor
  * @see DataStoreManager.setPreferences
  */
 @Composable
+@Deprecated("Use the setPrefererences(PreferenceBuilder) method instead.", ReplaceWith("setPrefererences(PreferenceBuilder)"), DeprecationLevel.WARNING)
 fun setPreferences(preferences: Map<String, Any>) {
-    LocalDataStoreManager.current.setPreferences(preferences)
+    val preferenceBuilder = buildPreferences(LocalDataStoreManager.current) {
+        preferences.forEach { (key, value) ->
+            key defaultValue value
+        }
+    }
+    setPreferences(builder = preferenceBuilder)
+}
+
+/**
+ * Sets preferences in the current [DataStoreManager] using a [PreferenceBuilder].
+ * This function can only be used inside of [ProvideDataStoreManager].
+ *
+ * @param builder The [PreferenceBuilder] instance containing the preferences to set.
+ * @see ProvideDataStoreManager
+ * @see DataStoreManager.setPreferences
+ * @see buildPreferences
+ */
+@Composable
+fun setPreferences(builder: PreferenceBuilder) {
+    LocalDataStoreManager.current.setPreferences(builder)
+}
+
+/**
+ * Sets preferences in the current [DataStoreManager] using a lambda with [PreferenceBuilder] receiver.
+ * This function can only be used inside of [ProvideDataStoreManager].
+ *
+ * @param builderActions A lambda with [PreferenceBuilder] receiver to build the preferences.
+ * @see ProvideDataStoreManager
+ * @see DataStoreManager.setPreferences
+ * @see buildPreferences
+ */
+@Composable
+fun setPreferences(builderActions: PreferenceBuilder.() -> Unit) {
+    LocalDataStoreManager.current.setPreferences(buildPreferences(LocalDataStoreManager.current, builderActions))
 }
 
 /**
@@ -66,6 +103,6 @@ fun setPreferences(preferences: Map<String, Any>) {
  * @see DataStoreManager.getPreference
  */
 @Composable
-fun <T: Any> getPreference(key: String): DataStoreManager.Preference<T> {
+fun <T : Any> getPreference(key: String): Preference<T> {
     return LocalDataStoreManager.current.getPreference<T>(key)
 }

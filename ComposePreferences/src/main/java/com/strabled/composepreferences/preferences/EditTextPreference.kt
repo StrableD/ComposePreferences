@@ -2,22 +2,19 @@ package com.strabled.composepreferences.preferences
 
 import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import com.strabled.composepreferences.*
-import com.strabled.composepreferences.utilis.DataStoreManager
 import com.strabled.composepreferences.utilis.DialogButton
 import com.strabled.composepreferences.utilis.DialogText
+import com.strabled.composepreferences.utilis.Preference
 import com.strabled.composepreferences.utilis.PreferenceDialog
 
 /**
@@ -27,7 +24,7 @@ import com.strabled.composepreferences.utilis.PreferenceDialog
  * a dialog is shown with an [OutlinedTextField] for the user to input a new value. The new value is saved
  * when the confirm button is clicked.
  *
- * @param preference The [DataStoreManager.Preference] object to be edited.
+ * @param preference The [Preference] object to be edited.
  * @param title The title of the preference.
  * @param modifier The [Modifier] to be applied to the preference.
  * @param summary An optional composable function to display a summary.
@@ -48,13 +45,13 @@ import com.strabled.composepreferences.utilis.PreferenceDialog
  * )
  * ```
  *
- * @see DataStoreManager.Preference
+ * @see Preference
  * @see PreferenceDialog
  * @see OutlinedTextField
  */
 @Composable
 fun EditTextPreference(
-    preference: DataStoreManager.Preference<String>,
+    preference: Preference<String>,
     title: String,
     modifier: Modifier = Modifier,
     summary: @Composable (() -> Unit)? = null,
@@ -65,8 +62,7 @@ fun EditTextPreference(
     onValueChange: (String) -> Unit = {},
     onValueSaved: (String) -> Unit = {}
 ) {
-    val preferenceData by preference
-    val preferenceValue by preferenceData.collectAsState()
+    val preferenceValue by preference.collectState()
 
     var showDialog by rememberSaveable { mutableStateOf(false) }
     var textValue by remember { mutableStateOf(preferenceValue) }
@@ -76,7 +72,7 @@ fun EditTextPreference(
      */
     fun edit() {
         try {
-            preference.set(textValue)
+            preference.updateValue(textValue)
             onValueChange(textValue)
         } catch (e: Exception) {
             Log.e("EditTextPreference", "Could not write preference $preference to database.", e)

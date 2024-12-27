@@ -3,10 +3,10 @@ package com.strabled.composepreferences.preferences
 import android.util.Log
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.strabled.composepreferences.utilis.DataStoreManager
+import com.strabled.composepreferences.utilis.Preference
 
 /**
  * A [Composable] function that represents a switch preference.
@@ -26,7 +26,7 @@ import com.strabled.composepreferences.utilis.DataStoreManager
  *
  * Example usage:
  * ```
- * val preference = DataStoreManager.Preference<Boolean>("example_key", false)
+ * val preference = Preference<Boolean>("example_key", false)
  * SwitchPreference(
  *     preference = preference,
  *     title = "Example Switch",
@@ -36,7 +36,7 @@ import com.strabled.composepreferences.utilis.DataStoreManager
  */
 @Composable
 fun SwitchPreference(
-    preference: DataStoreManager.Preference<Boolean>,
+    preference: Preference<Boolean>,
     title: String,
     modifier: Modifier = Modifier,
     summary: @Composable (() -> Unit)? = null,
@@ -45,12 +45,11 @@ fun SwitchPreference(
     leadingIcon: @Composable (() -> Unit)? = null,
     onValueChange: (Boolean) -> Unit = {}
 ) {
-    val preferenceData by preference
-    val preferenceValue by preferenceData.collectAsState()
+    val preferenceValue by  preference.collectState()
 
     fun edit(newValue: Boolean) {
         try {
-            preference.set(newValue)
+            preference.updateValue(newValue)
             onValueChange(newValue)
         } catch (e: Exception) {
             Log.e("SwitchPreference", "Could not write preference $preference to database.", e)

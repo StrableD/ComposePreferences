@@ -357,17 +357,16 @@ fun SettingsScreen() {
         }
         preferenceCategory("Color Picker Preference") {
             preferenceItem {
-                ColorPickerPreference<Int>(
+                ColorPickerPreference(
                     preference = getPreference("cp1"),
                     title = "Simple color picker",
                     summary = { Text(text = "A color picker dialog") }
                 )
             }
             preferenceItem {
-                val preferenceData by getPreference<Long>("cp2")
-                val value by preferenceData.collectAsState()
-                val color = Color(value)
-                ColorPickerPreference<Long>(
+                val preferenceData by getPreference<Color>("cp2")
+                val color by preferenceData.collectAsState()
+                ColorPickerPreference(
                     preference = getPreference("cp2"),
                     title = "Simple color picker",
                     leadingIcon = {
@@ -388,7 +387,7 @@ fun SettingsScreen() {
                 )
             }
             preferenceItem {
-                ColorPickerPreference<Int>(
+                ColorPickerPreference(
                     preference = getPreference("cp3"),
                     title = "Simple color picker",
                     summary = { Text(text = "A disabled color picker") },

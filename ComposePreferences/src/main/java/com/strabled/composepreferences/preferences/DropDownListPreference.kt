@@ -10,14 +10,13 @@ import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import com.strabled.composepreferences.PreferenceTheme
-import com.strabled.composepreferences.utilis.DataStoreManager
+import com.strabled.composepreferences.utilis.Preference
 
 /**
  * A [Composable][androidx.compose.runtime.Composable] function that displays a dropdown list preference.
@@ -67,7 +66,7 @@ import com.strabled.composepreferences.utilis.DataStoreManager
  */
 @Composable
 fun <T: Any> DropDownListPreference(
-    preference: DataStoreManager.Preference<T>,
+    preference: Preference<T>,
     title: String,
     modifier: Modifier = Modifier,
     summary: (@Composable (T?) -> Unit)? = null,
@@ -80,14 +79,13 @@ fun <T: Any> DropDownListPreference(
     trailingContent: @Composable () -> Unit = {}
 ) {
     require(!useSelectedInSummary || summary != null) { "Summary must be provided when useSelectedInSummary is true" }
-    val preferenceData by preference
-    val preferenceValue by preferenceData.collectAsState()
+    val preferenceValue by preference.collectState()
 
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     fun edit(value: T) {
         try {
-            preference.set(value)
+            preference.updateValue(value)
             expanded = false
             onItemSelected(value)
         } catch (e: Exception) {
@@ -181,7 +179,7 @@ fun <T: Any> DropDownListPreference(
  */
 @Composable
 fun <T: Any> DropDownListPreference(
-    preference: DataStoreManager.Preference<T>,
+    preference: Preference<T>,
     title: String,
     modifier: Modifier = Modifier,
     summary: (@Composable (T?) -> Unit)? = null,

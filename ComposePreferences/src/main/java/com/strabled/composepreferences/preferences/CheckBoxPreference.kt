@@ -3,10 +3,10 @@ package com.strabled.composepreferences.preferences
 import android.util.Log
 import androidx.compose.material3.Checkbox
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.strabled.composepreferences.utilis.DataStoreManager
+import com.strabled.composepreferences.utilis.Preference
 
 /**
  * A [Composable] function that displays a [Checkbox] [preference item][com.strabled.composepreferences.PreferenceItem].
@@ -15,7 +15,7 @@ import com.strabled.composepreferences.utilis.DataStoreManager
  * that reflects the current [Preference] value. When the [Checkbox] is clicked, the [Preference] value
  * is updated and the [onValueChange] callback is invoked.
  *
- * @param preference The [preference][com.strabled.composepreferences.utilis.DataStoreManager.Preference] to be managed.
+ * @param preference The [preference][com.strabled.composepreferences.utilis.Preference] to be managed.
  * @param title The title of the [preference item][com.strabled.composepreferences.PreferenceItem].
  * @param modifier The [Modifier] to be applied to the [preference item][com.strabled.composepreferences.PreferenceItem].
  * @param summary An optional composable function to display a summary below the [title].
@@ -39,7 +39,7 @@ import com.strabled.composepreferences.utilis.DataStoreManager
  */
 @Composable
 fun CheckBoxPreference(
-    preference: DataStoreManager.Preference<Boolean>,
+    preference: Preference<Boolean>,
     title: String,
     modifier: Modifier = Modifier,
     summary: @Composable (() -> Unit)? = null,
@@ -48,12 +48,11 @@ fun CheckBoxPreference(
     leadingIcon: @Composable (() -> Unit)? = null,
     onValueChange: (Boolean) -> Unit = {}
 ) {
-    val preferenceData by preference
-    val preferenceValue by preferenceData.collectAsState()
+    val preferenceValue by preference.collectState()
 
     fun edit(newValue: Boolean) {
         try {
-            preference.set(newValue)
+            preference.updateValue(newValue)
             onValueChange(newValue)
         } catch (e: Exception) {
             Log.e("CheckBoxPreference", "Could not write preference $preference to database.", e)
