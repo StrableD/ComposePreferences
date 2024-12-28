@@ -1,6 +1,6 @@
-[![GitHub Release](https://img.shields.io/github/v/release/StrableD/ComposePreferences?include_prereleases&display_name=tag&style=plastic)](https://github.com/StrableD/ComposePreferences/releases/latest) 
-[![Maven Central Version](https://img.shields.io/maven-central/v/io.github.strabled/ComposePreferences?style=plastic)](https://central.sonatype.com/artifact/io.github.strabled/ComposePreferences) 
-[![License](https://img.shields.io/github/license/StrableD/ComposePreferences)](LICENSE.txt)
+[![GitHub Release](https://img.shields.io/github/v/release/StrableD/ComposePreferences?include_prereleases&display_name=tag&style=plastic)](https://github.com/StrableD/ComposePreferences/releases/latest)
+[![Maven Central Version](https://img.shields.io/maven-central/v/io.github.strabled/ComposePreferences?style=plastic)](https://central.sonatype.com/artifact/io.github.strabled/ComposePreferences)
+[![License](https://img.shields.io/github/license/StrableD/ComposePreferences)](LICENSE)
 
 # Compose Preferences
 
@@ -45,9 +45,10 @@ implementation(libs.compose.preferences)
 ```
 
 ### Version Catalog
+
 ```toml
 [versions]
-composePreferences = {latest-version}
+composePreferences = { latest-version }
 
 [libraries]
 compose-preferences = { group = "io.github.strableD", name = "ComposePreferences", version.ref = "composePreferences" }
@@ -55,13 +56,34 @@ compose-preferences = { group = "io.github.strableD", name = "ComposePreferences
 
 ## Usage
 
-First you set up your DataStore by using the ``ProvideDataStoreManager`` method outside your Preferencs/Setting screen and set the preferences by supplying a map of key names and
-default values to the ``setPreferences`` method:
+First you set up your DataStore by using the ``ProvideDataStoreManager`` method outside your Preferencs/Setting screen and set the preferences by using the `PreferenceBuilder`.
+The `PreferenceBuilder` can be obtained by using the `buildPreferences` methode. The `PreferenceBuilder` is then passed to the `setPreferences` methode:
 
 ```kotlin
 ProvideDataStoreManager {
+    val preferences = buildPreferences(LocalDataStoreManager.current) {
+        "sl1" defaultValue false
+        "cp1" defaultValue (Color.Blue serializeWith colorSerializer)
+        ..
+    }
+
     setPreferences(preferences)
     SettingsScreen()
+}
+```
+
+The `buildPreferences` context can also be used directly in the `setPreferences` methode. Or a lambda with a `PreferenceBuilder` receiver can be passed:
+
+```kotlin
+val preferences: PreferenceBuilder.() -> Unit = {
+    "sl1" defaultValue false
+    "cp1" defaultValue (Color.Blue serializeWith colorSerializer)
+    ..
+}
+
+ProvideDataStoreManager {
+    setPreferences(preferences)
+    ..
 }
 ```
 
@@ -137,12 +159,15 @@ PreferenceScreen(
 
 To get the preference, you can use the convinience function `getPreference` which retrieves the preference from the `DataStoreManager` by the given key.
 A `StateFlow` of the value of the preference can be obtained by delegating the preference to a variable, and it can be set with the `Preference.set` method.
+
 ```kotlin
 val preference: Preference<Int> = getPreference<Int>("intKey")
 val preferenceData: StateFlow<Int> by preference
 val preferenceValue: Int by preferenceData.collectAsState()
 ```
+
 The preferences support serialization with the [kotlin serialization plugin](https://kotlinlang.org/docs/serialization.html).
+
 ```kotlin
 @Serializable
 data class User(val name: String, val age: Int)
@@ -261,7 +286,7 @@ MultiSelectPreference(
 ### [ColorPickerPreference](ComposePreferences/src/main/java/com/strabled/composepreferences/preferences/ColorPickerPreference.kt)
 
 ```kotlin
-ColorPickerPreference<Int>(
+ColorPickerPreference(
     preference = getPreference("cp1"),
     title = "Simple color picker",
     summary = { Text(text = "A color picker dialog") }
@@ -272,18 +297,12 @@ And that's it! You can create your whole preference screen in this way, and you 
 require.
 If something is missing, please create an Issue so we can discuss possible solutions.
 
+## Contributing
+
+You can help this project by contributing to it. 
+If you have a feature request or have found a bug, feel free to share this by following the [CONTRIBUTING.md](CONTRIBUTING.md) guidelines.
+Any help is appreciated!
+
 ## License
 
-    Copyright 2023 Google LLC
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        https://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+[License](LICENSE.txt)
