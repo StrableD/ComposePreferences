@@ -1,6 +1,6 @@
 [![GitHub Release](https://img.shields.io/github/v/release/StrableD/ComposePreferences?include_prereleases&display_name=tag&style=plastic)](https://github.com/StrableD/ComposePreferences/releases/latest)
 [![Maven Central Version](https://img.shields.io/maven-central/v/io.github.strabled/ComposePreferences?style=plastic)](https://central.sonatype.com/artifact/io.github.strabled/ComposePreferences)
-[![License](https://img.shields.io/github/license/StrableD/ComposePreferences)](LICENSE)
+[![License](https://img.shields.io/github/license/StrableD/ComposePreferences)](LICENSE.txt)
 
 # Compose Preferences
 
