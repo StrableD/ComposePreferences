@@ -33,13 +33,13 @@ This is not an officially supported Google product.
 build.gradle
 
 ```gradle
-implementation 'io.github.strableD:ComposePreferences:${latest-version}'
+implementation 'io.github.strabled:ComposePreferences:${latest-version}'
 ```
 
 build.gradle.kts
 
 ```kotlin
-implementation('io.github.strableD:ComposePreferences:${latest-version}')
+implementation('io.github.strabled:ComposePreferences:${latest-version}')
 //or with verion catalog
 implementation(libs.compose.preferences)
 ```
@@ -51,7 +51,7 @@ implementation(libs.compose.preferences)
 composePreferences = { latest-version }
 
 [libraries]
-compose-preferences = { group = "io.github.strableD", name = "ComposePreferences", version.ref = "composePreferences" }
+compose-preferences = { group = "io.github.strabled", name = "ComposePreferences", version.ref = "composePreferences" }
 ```
 
 ## Usage
