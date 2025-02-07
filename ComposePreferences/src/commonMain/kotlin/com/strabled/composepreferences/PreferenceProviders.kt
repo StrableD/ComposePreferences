@@ -10,8 +10,12 @@ import com.strabled.composepreferences.utilis.PreferenceBuilder
 import com.strabled.composepreferences.utilis.buildPreferences
 
 /**
- * Provides a default instance of [DataStoreManager] using the current [LocalContext].
- * The default name for the [DataStore] is "preferences".
+ * Provides a platform-specific default implementation of [DataStoreManager].
+ *
+ * This function must be implemented in each platform module (e.g., Android, iOS, Desktop).
+ * It returns a concrete [DataStoreManager] instance, typically for managing DataStore-based persistence.
+ *
+ * @return A [DataStoreManager] instance for the current platform.
  */
 @Composable
 expect fun defaultDataStoreManager(): DataStoreManager
@@ -45,6 +49,26 @@ internal fun noLocalProvidedFor(name: String): Nothing {
 @Composable
 fun ProvideDataStoreManager(dataStoreManager: DataStoreManager = defaultDataStoreManager(), content: @Composable () -> Unit) {
     CompositionLocalProvider(LocalDataStoreManager provides dataStoreManager, content = content)
+}
+
+/**
+ * Provides a theme for preferences, including color, typography, and spacing.
+ * This function sets the current value of [LocalPreferenceColorTheme], [LocalPreferenceTypography], and [LocalPreferenceSpacing].
+ * It allows the composable content to access the provided theme settings.
+ *
+ * @param colorTheme The color theme to be used.
+ * @param typography The typography settings to be used.
+ * @param spacing The spacing settings to be used.
+ * @param content The composable content that can access the provided theme.
+ */
+@Composable
+fun ProvidePreferenceTheme(colorTheme: PreferenceColorTheme, typography: PreferenceTypography, spacing: PreferenceSpacing, content: @Composable () -> Unit) {
+    CompositionLocalProvider(
+        LocalPreferenceColorTheme provides colorTheme,
+        LocalPreferenceTypography provides typography,
+        LocalPreferenceSpacing provides spacing,
+        content = content
+    )
 }
 
 /**

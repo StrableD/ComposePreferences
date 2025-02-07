@@ -18,11 +18,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
+import com.strabled.composepreferences.PreferenceItem
 import com.strabled.composepreferences.utilis.*
 
 /**
- * A [Composable] function that displays a [preference item][com.strabled.composepreferences.PreferenceItem] which, when clicked, shows a [bottom sheet][PreferenceBottomSheet]
- * with a list of selectable items. The selected item is stored in a [DataStore].
+ * A [Composable] function that displays a [preference item][PreferenceItem] which, when clicked, shows a [bottom sheet][PreferenceBottomSheet]
+ * with a list of selectable items. The selected item is stored with a [DataStoreManager].
  *
  * @param T The type of the [Preference] value.
  * @param preference The [DataStore preference][Preference] to be managed.

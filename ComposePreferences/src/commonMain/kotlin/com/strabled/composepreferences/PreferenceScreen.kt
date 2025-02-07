@@ -44,11 +44,7 @@ fun PreferenceScreen(
 ) {
     val preferenceScope = PreferenceScopeImpl().apply(content)
 
-    CompositionLocalProvider(
-        LocalPreferenceColorTheme provides theme,
-        LocalPreferenceTypography provides typography,
-        LocalPreferenceSpacing provides spacing
-    ) {
+    ProvidePreferenceTheme(theme, typography, spacing) {
         Scaffold(
             topBar = scaffoldComponents.topBar,
             bottomBar = scaffoldComponents.bottomBar,
