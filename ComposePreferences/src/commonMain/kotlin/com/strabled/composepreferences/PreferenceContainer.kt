@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 fun PreferenceContainer(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     theme: PreferenceColorTheme = PreferenceTheme.colorScheme,
     typography: PreferenceTypography = PreferenceTheme.typography,
     spacing: PreferenceSpacing = PreferenceTheme.spacing,

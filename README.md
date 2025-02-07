@@ -4,7 +4,7 @@
 
 # Compose Preferences
 
-[Preference](https://developer.android.com/develop/ui/views/components/settings) implementation
+[Preference](https://developer.android.com/develop/ui/views/components/settings) [Kotlin Multiplatform Project](https://www.jetbrains.com/kotlin-multiplatform/) implementation
 for [Jetpack Compose](https://developer.android.com/jetpack/compose) [Material 3](https://developer.android.com/jetpack/compose/designsystems/material3).
 
 This is not an officially supported Google product.
@@ -87,7 +87,7 @@ ProvideDataStoreManager {
 }
 ```
 
-You can provide your own ``DataStoreManager`` to the ``ProvideDataStoreManager`` if you don't want to use the default one. This can be done like this:
+You can provide your own ``DataStoreManager`` to the ``ProvideDataStoreManager`` if you don't want to use the default one. For Android, this can be done like this:
 
 ```kotlin
 val Context.dataStore by preferencesDataStore(name = "settings")
@@ -157,7 +157,16 @@ PreferenceScreen(
 }
 ```
 
-To get the preference, you can use the convinience function `getPreference` which retrieves the preference from the `DataStoreManager` by the given key.
+If you want to use the `Preferences` outside a fullsize componenet, you can use the `PreferenceContainer`:
+
+```kotlin
+PreferenceContainer {
+    ..
+}
+```
+
+To get the preference, you can use the convinience function `getPreference` inside `ProvideDataStoreManager` which retrieves the preference from the `DataStoreManager` by the given
+key.
 A `StateFlow` of the value of the preference can be obtained by delegating the preference to a variable, and it can be set with the `Preference.set` method.
 
 ```kotlin
