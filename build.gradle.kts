@@ -1,6 +1,5 @@
 // Top-level build file where you can add configuration options common to all subprojects/modules.
 buildscript {
-
     repositories {
         google()
         mavenCentral()
@@ -9,13 +8,17 @@ buildscript {
         classpath(libs.android.build.gradle)
         classpath(libs.kotlin.gradle.plugin)
         classpath(libs.compose.compiler.gradle.plugin)
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
 }
 
 plugins{
-    alias(libs.plugins.maven.publish)
-    alias(libs.plugins.gradleup.nmcp)
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.multiplatform) apply false
+    alias(libs.plugins.compose) apply false
+    alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.maven.publish) apply false
+    alias(libs.plugins.gradleup.nmcp) apply false
 }

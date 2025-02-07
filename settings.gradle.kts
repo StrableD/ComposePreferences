@@ -1,4 +1,4 @@
-pluginManagement{
+pluginManagement {
     repositories {
         google()
         mavenCentral()
@@ -7,7 +7,6 @@ pluginManagement{
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
@@ -15,5 +14,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "ComposePreferences"
-include(":app")
 include(":ComposePreferences")
+include(":sample:androidApp")
