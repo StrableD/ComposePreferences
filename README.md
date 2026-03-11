@@ -192,7 +192,7 @@ equivalent to the ``key`` used in previous Android preference libraries.
 You should be using unique keys for each preference. Using the same key for different preferences of the same type will result in their values being the same. Using the same key
 for different preferences of different types may result in unexpected behavior.
 
-### [TextPreference](ComposePreferences/src/main/java/com/strabled/composepreferences/preferences/TextPreference.kt)
+### [TextPreference](ComposePreferences/src/commonMain/kotlin/com/strabled/composepreferences/preferences/TextPreference.kt)
 
 ```kotlin
 TextPreference(
@@ -203,7 +203,7 @@ TextPreference(
 )
 ```
 
-### [SwitchPreference](ComposePreferences/src/main/java/com/strabled/composepreferences/preferences/SwitchPreference.kt)
+### [SwitchPreference](ComposePreferences/src/commonMain/kotlin/com/strabled/composepreferences/preferences/SwitchPreference.kt)
 
 ```kotlin
 SwitchPreference(
@@ -214,7 +214,7 @@ SwitchPreference(
 )
 ```
 
-### [SliderPreference](ComposePreferences/src/main/java/com/strabled/composepreferences/preferences/SliderPreference.kt)
+### [SliderPreference](ComposePreferences/src/commonMain/kotlin/com/strabled/composepreferences/preferences/SliderPreference.kt)
 
 ```kotlin
 SliderPreference(
@@ -226,7 +226,7 @@ SliderPreference(
 )
 ```
 
-### [CheckBoxPreference](ComposePreferences/src/main/java/com/strabled/composepreferences/preferences/CheckBoxPreference.kt)
+### [CheckBoxPreference](ComposePreferences/src/commonMain/kotlin/com/strabled/composepreferences/preferences/CheckBoxPreference.kt)
 
 ```kotlin
 CheckBoxPreference(
@@ -237,7 +237,7 @@ CheckBoxPreference(
 )
 ```
 
-### [EditTextPreference](ComposePreferences/src/main/java/com/strabled/composepreferences/preferences/EditTextPreference.kt)
+### [EditTextPreference](ComposePreferences/src/commonMain/kotlin/com/strabled/composepreferences/preferences/EditTextPreference.kt)
 
 ```kotlin
 EditTextPreference(
@@ -248,7 +248,7 @@ EditTextPreference(
 )
 ```
 
-### [DialogListPreference](ComposePreferences/src/main/java/com/strabled/composepreferences/preferences/DialogListPreference.kt)
+### [DialogListPreference](ComposePreferences/src/commonMain/kotlin/com/strabled/composepreferences/preferences/DialogListPreference.kt)
 
 ```kotlin
 DialogListPreference(
@@ -259,7 +259,7 @@ DialogListPreference(
 )
 ```
 
-### [DropDownListPreference](ComposePreferences/src/main/java/com/strabled/composepreferences/preferences/DropDownListPreference.kt)
+### [DropDownListPreference](ComposePreferences/src/commonMain/kotlin/com/strabled/composepreferences/preferences/DropDownListPreference.kt)
 
 ```kotlin
 DropDownListPreference(
@@ -270,7 +270,7 @@ DropDownListPreference(
 )
 ```
 
-### [BottomSheetListPreference](ComposePreferences/src/main/java/com/strabled/composepreferences/preferences/BottomSheetListPreference.kt)
+### [BottomSheetListPreference](ComposePreferences/src/commonMain/kotlin/com/strabled/composepreferences/preferences/BottomSheetListPreference.kt)
 
 ```kotlin
 BottomSheetListPreference(
@@ -281,7 +281,7 @@ BottomSheetListPreference(
 )
 ```
 
-### [MultiSelectPreference](ComposePreferences/src/main/java/com/strabled/composepreferences/preferences/MultiSelectPreference.kt)
+### [MultiSelectPreference](ComposePreferences/src/commonMain/kotlin/com/strabled/composepreferences/preferences/MultiSelectPreference.kt)
 
 ```kotlin
 MultiSelectPreference(
@@ -292,7 +292,7 @@ MultiSelectPreference(
 )
 ```
 
-### [ColorPickerPreference](ComposePreferences/src/main/java/com/strabled/composepreferences/preferences/ColorPickerPreference.kt)
+### [ColorPickerPreference](ComposePreferences/src/commonMain/kotlin/com/strabled/composepreferences/preferences/ColorPickerPreference.kt)
 
 ```kotlin
 ColorPickerPreference(
