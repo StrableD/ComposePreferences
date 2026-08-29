@@ -1,9 +1,9 @@
 [versions]
-sdk-compile = "35"
+sdk-compile = "37"
 sdk-min = "21"
-sdk-target = "35"
+sdk-target = "37"
 jvmTarget = "17"
-agp = "8.8.0"
+agp = "9.1.0"
 kgp = "2.4.10"
 ccgp = "2.4.10"
 kotlin = "2.4.10"
@@ -41,7 +41,7 @@ multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotl
 kotlin-android = { id = "org.jetbrains.kotlin.android" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-android-library = { id = "com.android.library", version.ref = "agp" }
+android-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "publish" }
