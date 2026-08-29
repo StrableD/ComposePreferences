@@ -12,13 +12,17 @@ plugins {
 }
 
 kotlin {
-    androidTarget {
-        publishAllLibraryVariants()
+    androidLibrary {
+        namespace = "com.strabled.composepreferences"
+        compileSdk = libs.versions.sdk.compile.get().toInt()
+        minSdk = libs.versions.sdk.min.get().toInt()
     }
+
+    jvmToolchain(libs.versions.jvmTarget.get().toInt())
 
     jvm()
 
-    js(IR) {
+    js {
         browser()
         binaries.executable()
     }
@@ -29,11 +33,9 @@ kotlin {
         binaries.executable()
     }
 
-    macosX64()
     macosArm64()
 
     listOf(
-        iosX64(),
         iosArm64(),
         iosSimulatorArm64(),
     ).forEach { target ->
@@ -72,6 +74,10 @@ kotlin {
             }
         }
 
+        val androidMain by getting {
+            dependsOn(noJsMain)
+        }
+
         val nativeMain by getting {
             dependencies {
                 implementation(libs.androidx.datastore.preferences)
@@ -87,35 +93,5 @@ kotlin {
         commonTest.dependencies {
             implementation(kotlin("test"))
         }
-    }
-}
-
-android {
-    namespace = "com.strabled.composepreferences"
-    compileSdk = libs.versions.sdk.compile.get().toInt()
-
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-
-    defaultConfig {
-        minSdk = libs.versions.sdk.min.get().toInt()
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlin {
-        jvmToolchain(libs.versions.jvmTarget.get().toInt())
-    }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.kotlin.toString()
     }
 }
